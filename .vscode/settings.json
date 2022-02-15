@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        " \"powermode.enabled\": true": "",
+        "chrono": "cpp",
+        "cstdint": "cpp",
+        "type_traits": "cpp",
+        "iostream": "cpp",
+        "ratio": "cpp",
+        "xiosbase": "cpp",
+        "xstring": "cpp",
+        "ostream": "cpp",
+        "vector": "cpp",
+        "cmath": "cpp"
+    }
+}
