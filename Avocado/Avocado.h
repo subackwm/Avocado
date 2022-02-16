@@ -37,27 +37,24 @@ namespace Avocado
     class AvocadoState
     {
     public:
-        static void SetState(AvocadoState *_state);
-
-        void Init(){
+        virtual void Init(){
 
         }
 
-        void Render(){
+        virtual void Render(){
 
         }
 
-        void Update(){
+        virtual void Update(){
 
-        }
+        }  
     };
 
     AvocadoState *state;
 
-    void AvocadoState::SetState(AvocadoState *_state)
+    void SetState(AvocadoState *_state)
     {
         state = _state;
-
         state->Init();
     }
 
