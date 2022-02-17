@@ -37,17 +37,17 @@ namespace Avocado
     class AvocadoState
     {
     public:
-        virtual void Init(){
-
+        virtual void Init()
+        {
         }
 
-        virtual void Render(){
-
+        virtual void Render()
+        {
         }
 
-        virtual void Update(){
-
-        }  
+        virtual void Update()
+        {
+        }
     };
 
     AvocadoState *state;
@@ -115,11 +115,22 @@ namespace Avocado
         SDL_Texture *image;
 
     public:
+        SDL_Rect crop;
+
         AvocadoImage(const char *_path)
         {
             SDL_Surface *tempSurface = IMG_Load(_path);
             image = SDL_CreateTextureFromSurface(renderer, tempSurface);
             SDL_FreeSurface(tempSurface);
+            crop = {0, 0, tempSurface->w, tempSurface->h};
+        }
+
+        AvocadoImage(const char *_path, int x, int y, int w, int h)
+        {
+            SDL_Surface *tempSurface = IMG_Load(_path);
+            image = SDL_CreateTextureFromSurface(renderer, tempSurface);
+            SDL_FreeSurface(tempSurface);
+            crop = {x, y, w, h};
         }
 
         SDL_Texture *GetImage()
@@ -478,12 +489,11 @@ namespace Avocado
 #pragma region AVOCADO_RENDER_FUNCTIONS
 
 void renderStretchImage(SDL_Renderer *renderer, int x, int y, int w, int h, SDL_Texture *texture,
-                        double angle, SDL_RendererFlip flip = SDL_FLIP_NONE)
+                        double angle, SDL_Rect src, SDL_RendererFlip flip = SDL_FLIP_NONE)
 {
-    SDL_Rect src, dst;
+    SDL_Rect dst;
     SDL_Point center;
 
-    src.x = src.y = 0;
     SDL_QueryTexture(texture, NULL, NULL, &src.w, &src.h);
 
     dst.x = x;
@@ -633,7 +643,7 @@ void _renderCalculatedObj(Avocado::AvocadoObject *_obj, const char *renderMode)
     }
 
     if (!strcmp(renderMode, "image"))
-        renderStretchImage(Avocado::renderer, _obj->renderPosition->GetX(), _obj->renderPosition->GetY(), _obj->renderWidth, _obj->renderHeight, _obj->GetSprite()->GetImage(), (_obj->GetRotation() + Avocado::camera->rotation) / M_PI * 180, SDL_FLIP_NONE);
+        renderStretchImage(Avocado::renderer, _obj->renderPosition->GetX(), _obj->renderPosition->GetY(), _obj->renderWidth, _obj->renderHeight, _obj->GetSprite()->GetImage(), (_obj->GetRotation() + Avocado::camera->rotation) / M_PI * 180, _obj->GetSprite()->crop, SDL_FLIP_NONE);
 
     if (!strcmp(renderMode, "font"))
         renderStretchFont(_obj->text, _obj->renderPosition->GetX(), _obj->renderPosition->GetY(), _obj->font, (_obj->GetRotation() + Avocado::camera->rotation) / M_PI * 180, _obj->color, SDL_FLIP_NONE);
